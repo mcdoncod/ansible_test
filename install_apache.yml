@@ -21,7 +21,6 @@
       state: latest
     when: ansible_distribution == "Ubuntu"
 
-# - Break for readability 
 # - Same above playbook, but for CentOS distros. 
   - name: update repository index
     dnf:
