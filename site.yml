@@ -21,15 +21,15 @@
 #targeting workstations
 - hosts: workstations
   become: true
-  tasks: 
-  
+  tasks:
+
   - name: install unzip
     package:
      name: unzip
 
   - name: install terraform
     unarchive:
-      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip 
+      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
       dest: /usr/local/bin
       remote_src: yes
       mode: 0755
@@ -50,6 +50,14 @@
       state: latest
     when: ansible_distribution == "Ubuntu"
 
+  - name: start apache2 (Ubuntu)
+    tags: apache2, apache, Ubuntu
+    service:
+     name: apache2
+     state: started
+     enabled: yes
+    when: ansible_distribution == "Ubuntu"
+    
   - name: install apache and php for CentOS servers
     tags: apache, centos, httpd
     dnf:
@@ -58,6 +66,31 @@
         - php
       state: latest
     when: ansible_distribution == "CentOS"
+
+  - name: start httpd (CentOS)
+    tags: apache, httpd, centos
+    service:
+     name: httpd
+     state: started
+     enabled: yes
+    when: ansible_distribution == "CentOS"
+  
+  - name: lineinfile module test
+    tags: apache, ubuntu, apache2
+    lineinfile:
+      path: /home/ansible/lineinfile.txt
+      regex: '^AllYourBaseAreBelongToUs'
+      line: AllYourBaseAreBelongToUs2
+    when: ansible_distribution == "Ubuntu"
+    register: apache2
+
+  - name: restart apache2 (Ubuntu)
+    tags: apache2, Ubuntu
+    service:
+      name: apache2
+      state: restarted
+    when: apache2.changed   
+
 
   - name: copy default html file for site
     tags: apache,httpd,apache2
@@ -98,4 +131,3 @@
     package:
       name: samba
       state: latest
-    
