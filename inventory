@@ -1,11 +1,17 @@
 [web_servers]
 192.168.1.175
+192.168.1.177 ansible_user=host1
 
 [db_servers]
 192.168.1.175 
+192.168.1.177 ansible_user=host1
 
 [file_servers]
 192.168.1.175
 
 [workstations]
 192.168.1.175
+
+[cent_os]
+192.168.1.177 ansible_user=host1
+
