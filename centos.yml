@@ -1,0 +1,20 @@
+#network interface change test
+- hosts: cent_os
+  become: true
+  tasks:
+
+  - name: Copy network interface test
+    copy:
+       src: ifcfg-enp0s3
+       dest: /etc/sysconfig/network-scripts/ifcfg-enp0s3
+       owner: root
+       group: root
+       mode: 0644
+    register: ifcfg
+
+  - name: Restart network service (CentOS)
+    service:
+      name: network
+      state: restarted
+    when: ifcfg.changed
+
